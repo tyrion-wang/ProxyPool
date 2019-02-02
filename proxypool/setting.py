@@ -25,7 +25,8 @@ TESTER_CYCLE = 20
 GETTER_CYCLE = 300
 
 # 测试API，建议抓哪个网站测哪个
-TEST_URL = 'https://www.douban.com/'
+#TEST_URL = 'https://www.douban.com/'
+TEST_URL = 'http://axure.tyrion.wang/' #测试https的地址就会出问题
 
 # API配置
 API_HOST = '0.0.0.0'
@@ -33,8 +34,8 @@ API_PORT = 5000
 
 # 开关
 TESTER_ENABLED = True
-GETTER_ENABLED = True
-API_ENABLED = True
+GETTER_ENABLED = False
+API_ENABLED = False
 # TESTER_ENABLED = True
 # GETTER_ENABLED = True
 # API_ENABLED = False
