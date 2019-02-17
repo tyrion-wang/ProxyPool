@@ -6,6 +6,7 @@ from proxypool.tester import Tester
 from proxypool.manager import Manager
 from proxypool.db import RedisClient
 from proxypool.setting import *
+import os
 
 
 class Scheduler():
@@ -36,17 +37,25 @@ class Scheduler():
         """
         app.run(API_HOST, API_PORT) #端口如果是5555，会报400的错误
 
-    def redis(self):
-        manager = Manager()
-        manager.checkRedis()
+    def schedule_redis(self):
+        """
+        开启Redis
+        """
+        os.system("redis-server")
 
     def run(self):
         print('代理池开始运行')
 
         # 开启redis线程
-        redis_process = Process(target=self.redis)
-        redis_process.start()
-        time.sleep(0.1)
+        while True:
+            self.redis = RedisClient()
+            print('检查redis')
+            if(self.redis.check()):
+                break
+            else:
+                redis_process = Process(target=self.schedule_redis)
+                redis_process.start()
+            time.sleep(0.5)
 
         if TESTER_ENABLED:
             tester_process = Process(target=self.schedule_tester)

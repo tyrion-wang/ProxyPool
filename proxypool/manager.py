@@ -1,6 +1,7 @@
 import sys
-import os
 from proxypool.db import RedisClient
+import os
+
 
 class Manager(object):
     def __init__(self):
@@ -10,6 +11,3 @@ class Manager(object):
         self.redis.clear()
         python = sys.executable
         os.execl(python, python, *sys.argv)
-
-    def checkRedis(self):
-        self.redis.check()
