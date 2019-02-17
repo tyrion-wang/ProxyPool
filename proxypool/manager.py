@@ -10,3 +10,6 @@ class Manager(object):
         self.redis.clear()
         python = sys.executable
         os.execl(python, python, *sys.argv)
+
+    def checkRedis(self):
+        self.redis.check()
