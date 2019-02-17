@@ -13,11 +13,11 @@ class Scheduler():
         定时测试代理
         """
         tester = Tester()
-        tester.run()
-        # while True:
-        #     print('测试器开始运行')
-        #     tester.run()
-        #     time.sleep(cycle)
+        # tester.run()
+        while True:
+            print('测试器开始运行')
+            tester.run()
+            time.sleep(cycle)
     
     def schedule_getter(self, cycle=GETTER_CYCLE):
         """

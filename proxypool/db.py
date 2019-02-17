@@ -98,6 +98,12 @@ class RedisClient(object):
         """
         return self.db.zrevrange(REDIS_KEY, start, stop - 1)
 
+    def clear(self):
+        """
+        清空数据库
+        """
+        self.db.delete(REDIS_KEY)
+
 
 if __name__ == '__main__':
     conn = RedisClient()

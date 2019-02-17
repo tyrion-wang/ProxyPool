@@ -1,6 +1,7 @@
 from flask import Flask, g
 
 from .db import RedisClient
+from proxypool.manager import Manager
 
 __all__ = ['app']
 
@@ -36,6 +37,15 @@ def get_counts():
     """
     conn = get_conn()
     return str(conn.count())
+
+@app.route('/init')
+def init():
+    """
+    重置代理池
+    """
+    manager = Manager()
+    manager.init()
+    return '清空成功'
 
 
 if __name__ == '__main__':
