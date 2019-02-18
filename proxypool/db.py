@@ -5,7 +5,6 @@ from proxypool.setting import MAX_SCORE, MIN_SCORE, INITIAL_SCORE
 from random import choice
 import re
 
-
 class RedisClient(object):
     def __init__(self, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD):
         """
@@ -97,6 +96,26 @@ class RedisClient(object):
         :return: 代理列表
         """
         return self.db.zrevrange(REDIS_KEY, start, stop - 1)
+
+    def clear(self):
+        """
+        清空数据库
+        """
+        self.db.delete(REDIS_KEY)
+
+    def check(self):
+        try:
+            # 验证是否正常登录
+            print(self.db.ping())
+        # 连接错误，一般由错误地址或端口号引起
+        except redis.connection.ConnectionError as err:
+            print('Exception.ConnectionError: ', err)
+            return False
+        # 响应错误，错误的数据库名称或密码，或其他错误引起
+        except redis.connection.ResponseError as err:
+            print('Exception.ResponseError: ', err)
+            return False
+        return True
 
 
 if __name__ == '__main__':

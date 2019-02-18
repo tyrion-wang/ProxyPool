@@ -3,8 +3,10 @@ from multiprocessing import Process
 from proxypool.api import app
 from proxypool.getter import Getter
 from proxypool.tester import Tester
+from proxypool.manager import Manager
 from proxypool.db import RedisClient
 from proxypool.setting import *
+import os
 
 
 class Scheduler():
@@ -13,11 +15,11 @@ class Scheduler():
         定时测试代理
         """
         tester = Tester()
-        tester.run()
-        # while True:
-        #     print('测试器开始运行')
-        #     tester.run()
-        #     time.sleep(cycle)
+        # tester.run()
+        while True:
+            print('测试器开始运行')
+            tester.run()
+            time.sleep(cycle)
     
     def schedule_getter(self, cycle=GETTER_CYCLE):
         """
@@ -34,10 +36,27 @@ class Scheduler():
         开启API
         """
         app.run(API_HOST, API_PORT) #端口如果是5555，会报400的错误
-    
+
+    def schedule_redis(self):
+        """
+        开启Redis
+        """
+        os.system("redis-server")
+
     def run(self):
         print('代理池开始运行')
-        
+
+        # 开启redis线程
+        while True:
+            self.redis = RedisClient()
+            print('检查redis')
+            if(self.redis.check()):
+                break
+            else:
+                redis_process = Process(target=self.schedule_redis)
+                redis_process.start()
+            time.sleep(0.5)
+
         if TESTER_ENABLED:
             tester_process = Process(target=self.schedule_tester)
             tester_process.start()
@@ -45,7 +64,7 @@ class Scheduler():
         if GETTER_ENABLED:
             getter_process = Process(target=self.schedule_getter)
             getter_process.start()
-        
+
         if API_ENABLED:
             api_process = Process(target=self.schedule_api)
             api_process.start()
